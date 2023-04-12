@@ -1,0 +1,22 @@
+
+li {
+    color: green;
+}
+a:visited {
+    color: green;
+}
+a:hover {
+    color: blue;
+}
+
+.sample {
+    font-size: 30px;
+}
+#text {
+    color: red;
+}
+
+div p {
+    color: red;
+    border: 5px solid orange;
+}
