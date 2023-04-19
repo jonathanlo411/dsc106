@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles.css" />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Lab2 activity</title>
+</head>
+<body>
+    <p id="name"> </p>
+    <p id="age"> </p>
+    <p id="hobbies"> </p>
+	<script type="text/javascript">
+
+        const student = { 
+            name: 'John',
+            age: 20,
+            hobbies: ['reading', 'games', 'coding'],
+        };
+
+        //Your code here
+        for (let key in student) {
+            let item = document.getElementById(String(key))
+            let str = `${key} - ${JSON.stringify(student[key])}`
+            item.innerHTML = str
+            console.log(str)
+        }
+	</script>
+    <!-- Your Scenery code here -->
+    <svg width="1000" height="500">
+        <rect width="1000" height="500" style="fill: #87ceea;"></rect>
+        <rect width="1000" height="250" y="250" style="fill: #a52b2a;"></rect>
+        <g style="fill: #a52b2a;">
+            <polygon points="0,250 200,250, 100,140"></polygon>
+            <polygon points="200,250 400,250, 300,140"></polygon>
+            <polygon points="400,250 600,250, 500,140"></polygon>
+        </g>
+        <circle cx="850" cy="100" r="50" style="fill: yellow; stroke:rgb(0, 0, 0); stroke-width: 3"></circle>
+        <g style="stroke:rgb(0, 0, 0); stroke-width: 2;">
+            <line x1="100" y1="140" x2="100" y2="115"></line>
+            <line x1="300" y1="140" x2="300" y2="115"></line>
+            <line x1="500" y1="140" x2="500" y2="115"></line>
+        </g>
+        <g style="stroke: rgb(0, 0, 0); stroke-width: 1">
+            <rect width="20" height="10" x="100" y="115" style="fill: rgb(125, 300, 100)"></rect>
+            <rect width="20" height="10" x="300" y="115" style="fill: rgb(300, 125, 100)"></rect>
+            <rect width="20" height="10" x="500" y="115" style="fill: rgb(125, 100, 300)"></rect>
+        </g>
+    </svg>
+	
+
+
+</body>
+</html>
