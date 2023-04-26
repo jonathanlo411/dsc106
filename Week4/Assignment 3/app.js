@@ -3,7 +3,7 @@ function assignment3(){
     let names = ['Amy', 'Jake', 'Sara', 'Liam', 'Robert', 'Harry', 'Liam', 'Jake', 'Sara', 'Taylor', 'Kathy',                'Amy', 'Jake', 'Harry', 'Nina', 'Robert', 'Harry']
     question0()
     question1(5)
-    question2()
+    question2(names)
     question3()
     question4()
 
@@ -25,21 +25,20 @@ question1=function(n){
     }
 }
 
-question2=function(){
+question2=function(arr){
     // Print the {Name:Count} data structure to the console and the names which occur more than 2 times in index.html.
-    let temp32 = ['Amy', 'Jake', 'Sara', 'Liam', 'Robert', 'Harry', 'Liam', 'Jake', 'Sara', 'Taylor', 'Kathy',                'Amy', 'Jake', 'Harry', 'Nina', 'Robert', 'Harry']
-    const target = document.getElementById("q2")
+    let target = document.getElementById("q2")
 
     // p1
     let counts = new Object;
-    for (let name of temp32) {
+    for (let name of arr) {
         if (name in counts) { counts[name]++ } else { counts[name] = 1 }
     }
     console.log(counts)
 
     // p2
     for (let name of Object.keys(counts)) {
-        (counts[name] > 2) ? target.innerHTML += name + ", " : undefined
+        (counts[name] > 2) ? target.innerHTML += name + " " : undefined
     }
 }
 
@@ -49,7 +48,21 @@ question3=function(){
     $.getJSON('./data.json').then(data=>{
         //Your solution goes here. Tip: try console.log(data) to see how data is structured.
         
-
+        const target = document.getElementById("q3")
+        const json = JSON.parse(data)
+        let regionProfits = {
+            East: 0,
+            West: 0,
+            Central: 0,
+            South: 0
+        }
+        for (let i = 0; i < json.length; i ++) {
+            const region = json[i]['Region']
+            regionProfits[region] += json[i]['Profit']
+        }
+        for (let region of Object.keys(regionProfits)) {
+            target.innerHTML += `${region}: ${Number((regionProfits[region]).toFixed(2))}<br>`
+        }
     });
     
 }
@@ -58,6 +71,18 @@ question4=function(){
     $.getJSON('./data.json').then(data=>{
         //Your solution goes here. Tip: try console.log(data) to see how data is structured.
         
+        const target = document.getElementById("q4")
+        const json = JSON.parse(data)
+        let furnSales = 0;
+        let furnCount = 0;
+        for (let i = 0; i < json.length; i ++) {
+            const entry = json[i]
+            if (entry['Sub-Category'] === 'Furnishings') {
+                furnCount ++
+                furnSales += entry['Sales']
+            }
+        }
+        target.innerHTML = `Average Sales for furnishing sub-category: ${Number((furnSales/furnCount)).toFixed(2)}`
     })
     
 }
