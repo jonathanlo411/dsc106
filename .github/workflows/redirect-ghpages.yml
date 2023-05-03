@@ -20,4 +20,4 @@ jobs:
         REPO: self
         BRANCH: gh-pages
         FOLDER: project
-        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
