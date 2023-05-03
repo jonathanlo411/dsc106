@@ -10,8 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    # Any prerequisite steps
-    - uses: actions/checkout@master
+    # Checkout the repository with write permission to the gh-pages branch
+    - name: Checkout gh-pages branch
+      uses: actions/checkout@v2
+      with:
+        ref: 'refs/heads/gh-pages'
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     # Deploy to local repo
     - name: Deploy
