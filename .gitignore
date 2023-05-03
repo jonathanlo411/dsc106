@@ -1,2 +1,6 @@
 # Notebook Saves
-ipynb_checkpoints
+.ipynb_checkpoints
+
+# Secrets
+secrets.json
+
