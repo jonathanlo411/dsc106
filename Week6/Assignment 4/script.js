@@ -47,6 +47,7 @@ const assignment4 = () => {
   // add bar
   const add = () => {
     // Update Dataset
+    if (dataset.length === 26) { return }
     let newChar = alphabet[dataset.length]
     let newNum = Math.floor(Math.random() * 20) + 1
     dataset.push({x: newChar, y: newNum})
