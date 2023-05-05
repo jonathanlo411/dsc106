@@ -24,11 +24,12 @@ const assignment4 = () => {
   let yScale = d3.scaleLinear()
     .domain([0, 20])
     .range([height - padding, padding])
+  let bars = svg.selectAll(".bar")
+    .data(dataset)
 
   // render bar chart
   const render = () => {
-    svg.selectAll(".bar")
-      .data(dataset).enter().append("rect")
+    bars.enter().append("rect")
       .attr("class", "bar")
       .attr("x", d => xScale(d.x))
       .attr("y", d => yScale(d.y))
@@ -51,24 +52,53 @@ const assignment4 = () => {
     dataset.push({x: newChar, y: newNum})
 
     // Update Scales
-    xScale = d3.scaleBand()
+    let xScale = d3.scaleBand()
       .domain(dataset.map(d => d.x))
       .range([padding, width - padding])
       .padding(0.1)
-    yScale = d3.scaleLinear()
+    let yScale = d3.scaleLinear()
       .domain([0, 20])
       .range([height - padding, padding])
-    svg.selectAll("g.yScale")
-      .call(yScale);
-    svg.selectAll("g.xScale")
-      .call(xScale);
 
+    // Redraw
+    var bars = svg.selectAll(".bars")
+      .data(dataset, function(d){ return d.title});
+    bars.exit()
+      .transition()
+      .duration(1000)
+      .attr("height", 0)
+      .remove();
+    bars.enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", d => xScale(d.x))
+      .attr("y", d => yScale(d.y))
+      .attr("width", xScale.bandwidth())
+      .attr("height", d => height - yScale(d.y) - padding)
+      .attr("fill", "#abcbe5")
+      .merge(bars)//and from now on, both the enter and the update selections
+      .transition()
+      .duration(1000)
+      .delay(1000)
+      .attr("class", "bar")
+      .attr("x", d => xScale(d.x))
+      .attr("y", d => yScale(d.y))
+      .attr("width", xScale.bandwidth())
+      .attr("height", d => height - yScale(d.y) - padding)
+      .attr("fill", "#abcbe5")
+    d3.select(".xAxis")
+      .transition()
+      .duration(1000)
+      .delay(750)
+      .call(xScale);
+    console.log(dataset)
   };
+  document.getElementById("add").addEventListener("click", () => add())
 
   // remove bar
   const remove = () => {
 
   };
+  document.getElementById("remove").addEventListener("click", () => remove())
 
   // threshold highlighting
   const threshold = () => {
@@ -77,7 +107,7 @@ const assignment4 = () => {
   
   // calling the functions
   render();
-  add();
+  // add();
   remove();
   threshold();
 };
