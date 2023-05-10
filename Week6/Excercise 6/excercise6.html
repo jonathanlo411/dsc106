@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>Lecture Exercise 6 Material</title>
+</head>
+<body>
+
+    <div id="jpm_viz"></div>
+
+    <script type="text/javascript">
+        const rowConverter = function(d){
+            // Define your rowConverter here
+            let parser = d3.timeParse("%m/%d/%Y");
+            return {
+                date: parser(d.date),
+                value: +d.value
+            }
+        };
+
+        const jpm = d3.csv("JPM.csv",rowConverter)
+
+        jpm.then(function(data){
+            console.log("data", data);
+            const margin = {top: 10, right: 30, bottom: 30, left: 60},
+            width = 460 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+            var svg = d3.select("#jpm_viz")
+                .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+            // Add X axis and scale
+            const xScale = d3.scaleTime()
+                .domain(d3.extent(data, d => d.date))
+                .range([0, width])
+            svg.append("g").call(d3.axisBottom(xScale))
+                .attr("class", "xAxis")
+                .attr("transform", `translate(0, ${height})`)
+
+            // Add Y axis and scale
+            const yScale = d3.scaleLinear()
+                .domain(d3.extent(data, d => d.value))
+                .range([height, 0])
+            svg.append("g").call(d3.axisLeft(yScale))
+                .attr("class", "yAxis")
+                // .attr("transform", `translate(${margin.left}, 0)`)
+
+
+            // Add the linechart
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 1.5)
+                .attr("d", d3.line()
+                    .x(d => xScale(d.date))
+                    .y(d => yScale(d.value))
+                )
+        
+
+        })
+    </script>
+
+
+
+</body>
+</html>
