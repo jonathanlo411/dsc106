@@ -27,8 +27,9 @@ const assignment4 = () => {
 
   // render bar chart
   const render = () => {
-    svg.selectAll(".bar")
-      .data(dataset).enter().append("rect")
+    let bars = svg.selectAll(".bar")
+      .data(dataset)
+    bars.enter().append("rect")
       .attr("class", "bar")
       .attr("x", d => xScale(d.x))
       .attr("y", d => yScale(d.y))
@@ -46,38 +47,94 @@ const assignment4 = () => {
   // add bar
   const add = () => {
     // Update Dataset
+    if (dataset.length === 26) { return }
     let newChar = alphabet[dataset.length]
     let newNum = Math.floor(Math.random() * 20) + 1
     dataset.push({x: newChar, y: newNum})
 
     // Update Scales
-    xScale = d3.scaleBand()
+    let xScale = d3.scaleBand()
       .domain(dataset.map(d => d.x))
       .range([padding, width - padding])
       .padding(0.1)
-    yScale = d3.scaleLinear()
-      .domain([0, 20])
-      .range([height - padding, padding])
-    svg.selectAll("g.yScale")
-      .call(yScale);
-    svg.selectAll("g.xScale")
-      .call(xScale);
 
+    // Redraw
+    var bars = svg.selectAll(".bar")
+      .data(dataset, d => d.x);
+    bars.enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", d => xScale(d.x))
+      .attr("y", d => yScale(d.y))
+      .attr("width", xScale.bandwidth())
+      .attr("height", d => height - yScale(d.y) - padding)
+      .attr("fill", "#abcbe5")
+      .merge(bars)
+      .transition()
+      .duration(200)
+      .attr("class", "bar")
+      .attr("x", d => xScale(d.x))
+      .attr("y", d => yScale(d.y))
+      .attr("width", xScale.bandwidth())
+      .attr("height", d => height - yScale(d.y) - padding)
+      .attr("fill", "#abcbe5");
+    d3.select(".xAxis")
+      .transition()
+      .duration(200)
+      .call(d3.axisBottom(xScale));
   };
+  document.getElementById("add").addEventListener("click", () => add())
 
   // remove bar
   const remove = () => {
+    // Update Dataset
+    dataset.pop()
 
+    // Update Scales
+    let xScale = d3.scaleBand()
+      .domain(dataset.map(d => d.x))
+      .range([padding, width - padding])
+      .padding(0.1)
+
+    // Redraw
+    var bars = svg.selectAll(".bar")
+      .data(dataset, d => d.x);
+    bars.join("rect")
+      .transition()
+      .duration(200)
+      .attr("x", d => xScale(d.x))
+      .attr("y", d => yScale(d.y))
+      .attr("width", xScale.bandwidth())
+      .attr("height", d => height - yScale(d.y) - padding)
+      .attr("fill", "#abcbe5")
+    d3.select(".xAxis")
+      .transition()
+      .duration(200)
+      .call(d3.axisBottom(xScale));
   };
+  document.getElementById("remove").addEventListener("click", () => remove())
 
   // threshold highlighting
   const threshold = () => {
-
+    let val = document.getElementById("thresh-in").value
+    var bars = svg.selectAll(".bar")
+      .data(dataset, d => d.x);
+    bars.join("rect")
+      .transition()
+      .duration(200)
+      .attr("fill", d => (d.y > val) ? "orange" : "grey")
   };
+  document.getElementById("submit").addEventListener("click", () => {
+    threshold()
+  })
+  document.getElementById("thresh-in").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      threshold()
+    }
+  })
   
   // calling the functions
   render();
-  add();
-  remove();
-  threshold();
+  // add();S
+  // threshold();
 };

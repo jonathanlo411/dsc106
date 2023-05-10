@@ -15,6 +15,12 @@ x<!DOCTYPE html>
             font-family: sans-serif;
             font-size: 11px;
         }
+        #threshold {
+            display: flex;
+        }
+        #threshold * {
+            margin: 0.5vh;
+        }
     </style>
 </head>
 <body onload="assignment4()">
@@ -22,6 +28,11 @@ x<!DOCTYPE html>
     <svg></svg>
     <button id="add">Add</button>
     <button id="remove">Remove</button>
+    <div id="threshold">
+        <p>Threshold</p>
+        <input id="thresh-in" type="number" placeholder="10">
+        <button id="submit">Submit</button>
+    </div>
     <script>
 </script>
 </body>
