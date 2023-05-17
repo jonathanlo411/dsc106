@@ -290,7 +290,7 @@ let question3=function(data){
             .attr("transform", "scale(0.015)")
             .attr("fill", d => colorMap[d.Sport])
     }
-    d3.html("./icon.svg").then(d => renderIcon(d))
+    d3.html("./medal.svg").then(d => renderIcon(d))
     
     // Create chart metadata
     svg_q3.append("text")

@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<title>Lecture Exercise 7 Material</title>
+</head>
+<body>
+
+	<div id="stacked">
+		<p>Stacked Bar</p>
+	</div>
+	<script type="text/javascript">
+							
+		// input dataset
+    const data = [
+            {
+              day: "Mon",
+              banana: 120,
+              blueberries: 180,
+              apple: 100,
+              orange: 150,
+              peach: 100,
+              kiwi: 90,
+              grape: 130,
+            },
+            {
+              day: "Tue",
+              banana: 60,
+              blueberries: 185,
+              apple: 105,
+              orange: 110,
+              peach: 140,
+              kiwi: 130,
+              grape: 80,
+            },
+            {
+              day: "Wed",
+              banana: 100,
+              blueberries: 215,
+              apple: 110,
+              orange: 170,
+              peach: 90,
+              kiwi: 100,
+              grape: 150,
+            },
+            {
+              day: "Thu",
+              banana: 80,
+              blueberries: 230,
+              apple: 105,
+              orange: 120,
+              peach: 130,
+              kiwi: 150,
+              grape: 160,
+            },
+            {
+              day: "Fri",
+              banana: 120,
+              blueberries: 240,
+              apple: 105,
+              orange: 160,
+              peach: 110,
+              kiwi: 140,
+              grape: 150,
+            },
+          ];
+
+	// setting the color for each secondary Key value (types of fruits)
+    const colors = [
+      "#FFE135",
+      "royalblue",
+      "#de3163",
+      "orange",
+      "#FFE5B4",
+      "#8ee53f",
+      "purple",
+    ];
+    const colorScale = d3.scaleOrdinal().domain([0, 1, 2, 3, 4, 5, 6]).range(colors);
+    const margin = { top: 100, bottom: 50, left: 40, right: 40 };
+    const width = 500 - margin.left - margin.right;
+    const height = 500 - margin.top - margin.bottom;
+
+    //svg canvas
+    const svg = d3
+      .select("#stacked")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+
+	  /* Activity 1: stack secondary Key values, using stack() method */
+    const fruit = Object.keys(data[0]).filter((d) => d != "day"); // fruit array, use it to create the series and stacked
+    const stack = d3.stack()
+        .keys(fruit);
+    const result = stack(data);
+
+
+
+    /* Activity 2: group <g> bars with respect to the secondary Key i.e Fruit, and fill it with the "colors" we defined*/
+    const groups = svg.selectAll(".gbars")
+        .data(result).enter().append("g")
+        .attr("class","gbars")
+        .attr("fill", d => colorScale(d))
+    
+    
+
+    
+    //Scale for x- and y-axis
+    const xScale = d3.scaleBand()
+      .domain(data.map((d) => d.day)) // data.map create an array of days
+      .range([0, width])
+      .padding(0.1);
+      
+    // Calculate the maximum y value for the y scale
+    let maxValue = d3.max(result, (d) => d3.max(d, (d) => d[1]));
+    const yScale = d3.scaleLinear().domain([0, maxValue]).range([height, 0]);
+
+    // Axes
+    const xAxis = d3.axisBottom().scale(xScale);
+    const yAxis = d3.axisLeft().scale(yScale);
+    svg.append("g").attr("transform", `translate(0, ${height})`).call(xAxis);
+    svg.append("g").call(yAxis);
+
+    /* Activity 3: draw a bar for each fruit */	
+    groups.selectAll("rect")
+      .data(d => d).enter().append("rect")
+      .attr("x", d => xScale(d.data.day))
+      .attr("y", d => yScale(d[1]))
+      .attr("height", d => yScale(d[0]) - yScale(d[1]))
+      .attr("width", xScale.bandwidth())
+
+	</script>
+
+</body>
+</html>
