@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+    <div class="stream"> </div>
+    <script>
+        // set the dimensions and margins of the graph
+        let padding = 35
+        let width = 500
+        let height = 420
+        // append the svg object to the div "stream" of the page
+        var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width + padding)
+            .attr("height", height + padding)
+            .append("g")
+            .attr("transform", `translate(${padding}, ${padding})`);
+
+        let convertVal = (d) => {
+            return {
+                year: +d.year,
+                Amanda: +d.Amanda,
+                Ashley: +d.Ashley,
+                Betty: +d.Betty,
+                Deborah: +d.Deborah,
+                Dorothy: +d.Dorothy,
+                Helen: +d.Helen,
+                Linda: +d.Linda,
+                Patricia: +d.Patricia
+            }
+        }
+
+        // Load the Data
+        babynames = d3.csv("babynames.csv", convertVal)
+        babynames.then(function (data){
+            
+            var keys = data.columns.slice(1);
+            let maxVal = d3.max(data.map(d => d3.max([
+                    d.Amanda,
+                    d.Ashley,
+                    d.Betty,
+                    d.Deborah,
+                    d.Dorothy,
+                    d.Helen,
+                    d.Linda,
+                    d.Patricia
+                ])
+            ))
+            console.log(maxVal)
+
+            //define scaling
+            var xScale = d3.scaleLinear()
+                .domain(d3.extent(data, (d) => d.year))
+                .range([0, width]);
+            svg.append("g")
+                .attr("transform", `translate(0, ${height - padding})`)
+                .call(d3.axisBottom(xScale).ticks(5))
+            var yScale = d3
+                .scaleLinear()
+                .domain([0, maxVal])
+                .range([height - padding, padding]);
+            svg.append("g").call(d3.axisLeft(yScale))
+
+            var colors = d3
+                .scaleOrdinal()
+                .domain(keys)
+                .range([
+                    "#e41a1c",
+                    "#377eb8",
+                    "#4daf4a",
+                    "#984ea3",
+                    "#ff7f00",
+                    "#ffff33",
+                    "#a65628",
+                    "#f781bf",
+                ]); 
+
+            //Stack the data
+            var stacked  = d3.stack()
+                .keys(keys)(data)
+                .map((d) => (d.forEach((v) => (v.key = d.key)), d));
+
+
+            // Generate streamgraph
+            svg.selectAll("mylayers")
+                .data(stacked)
+                .join("path")
+                .style("fill", (d) => colors(d.key))
+                .attr("d", (d) =>
+                d3
+                    .area()
+                    .x((d, i) => xScale(d.data.year))
+                    .y0((d) => yScale(d[0]))
+                    .y1((d) => yScale(d[1]))(d)
+                );
+
+
+        })
+    </script>
+</body>
+
+</html>
