@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://d3js.org/d3.v7.min.js"></script>
+		<title>Lecture Exercise 8 Material</title>	
+	</head>
+	<body>
+		<p> Displaying exercise8.html </p>
+        <div id="radio"> 
+            <input type="radio" id="default" name="size" value="default" checked>
+            <label for="default">Default Size</label>
+            <input type="radio" id="large" name="size" value="large">
+            <label for="large">Large Size</label>
+        </div>
+		<script type="text/javascript">
+
+			// width and height of the canvas
+			const width = 500;
+			const height = 300;
+
+			//network dataset
+			const dataset = {
+				nodes: [
+					{ agerange: 1, name: "Adam"	, value: 4 },
+					{ agerange: 2, name: "Bob"	, value: 10 },
+					{ agerange: 2, name: "Carrie" , value: 7},
+					{ agerange: 1, name: "Donovan", value: 1},
+					{ agerange: 2, name: "Edward" , value: 13},
+					{ agerange: 2, name: "Felicity" , value: 8},
+					{ agerange: 2, name: "George" , value: 5},
+					{ agerange: 1, name: "Hannah" , value: 15},
+					{ agerange: 2, name: "Iris" 	, value: 17},
+					{ agerange: 1, name: "Jerry" , value: 3}
+				],
+				edges: [
+					{ source: 0, target: 1 },
+					{ source: 0, target: 2 },
+					{ source: 0, target: 3 },
+					{ source: 0, target: 4 },
+					{ source: 1, target: 5 },
+					{ source: 2, target: 5 },
+					{ source: 2, target: 5 },
+					{ source: 3, target: 4 },
+					{ source: 5, target: 8 },
+					{ source: 5, target: 9 },
+					{ source: 6, target: 7 },
+					{ source: 7, target: 8 },
+					{ source: 8, target: 9 }
+				]
+			};
+
+			//Initialize a simple force layout, using the nodes and edges in dataset
+			let force = d3.forceSimulation(dataset.nodes)
+                .force('charge', d3.forceManyBody().strength(1))
+                .force('center', d3.forceCenter(width/2, height/2))
+                .force('collision', d3.forceCollide().radius(function(d) {
+                    return d.value
+                }))
+            //TO DO: Add elements indicated in write-up
+
+
+
+
+			//create the color array using an existing colormap
+			const colors = d3.scaleOrdinal(d3.schemeCategory10);
+
+			//create SVG canvas
+			const svg = d3.select("body")
+						.append("svg")
+						.attr("width", width)
+						.attr("height", height);
+			
+			//create edges
+			const edges = svg.selectAll("line")
+				.data(dataset.edges)
+				.enter()
+				.append("line")
+				.attr("stroke", "lightgray")
+			
+			//create nodes
+			const nodes = svg.selectAll("circle")
+				.data(dataset.nodes)
+				.enter()
+				.append("circle")
+                .attr('r', d => d.value)
+				.style("fill", function(d, i) {
+					return colors(i);
+				});
+
+			
+			//when the simulation "ticks", execute the callback function
+			force.on("tick", function() {
+
+				edges.attr("x1", function(d) { return d.source.x; })
+					 .attr("y1", function(d) { return d.source.y; })
+					 .attr("x2", function(d) { return d.target.x; })
+					 .attr("y2", function(d) { return d.target.y; });
+			
+				nodes.attr("cx", function(d) { return d.x; })
+					 .attr("cy", function(d) { return d.y; })
+	
+			});
+
+            const radio = d3.select("#radio").on("change", function(d) {
+                const size = d.target.value;
+                console.log(size);
+                if (size == "default"){
+                    nodes.attr('r', d => d.value);
+                } else if (size == "large"){
+                    nodes.attr('r', d => d.value * 1.5);
+                }
+            });
+		</script>
+	</body>
+</html>
