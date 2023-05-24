@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://d3js.org/d3.v7.min.js"></script>	
+  <title>Lab7 : Force Directed Graph</title>
+</head>
+<body>
+  <div id ="force"></div>
+  <script>
+    let width=1000;
+    let height=800;
+    let margin={
+        top:50,bottom:50,left:50,right:50
+    }
+    let data={
+        "nodes":[
+        {id: 1, name: 'USA', x: 87, y: 145, continent: "NA"},
+            {id: 2, name: 'CHINA', x: 176, y: 94, continent: "AS"},
+            {id: 3, name: 'INDIA', x: 249, y: 162, continent: "AS"},
+            {id: 4, name: 'RUSSIA', x: 208, y: 253, continent: "EU"},
+            {id: 5, name: 'JAPAN', x: 105, y: 246, continent: "AS"},
+            {id: 6, name: 'FRANCE', x: 345, y: 120, continent: "EU"}
+        ],
+        "edges":[{'source': {'id': 2, 'name': 'CHINA', 'x': 176, 'y': 94},
+                  'target': {'id': 6, 'name': 'FRANCE', 'x': 345, 'y': 120}},
+                 {'source': {'id': 1, 'name': 'USA', 'x': 87, 'y': 145},
+                  'target': {'id': 4, 'name': 'RUSSIA', 'x': 208, 'y': 253}},
+                 {'source': {'id': 1, 'name': 'USA', 'x': 87, 'y': 145},
+                  'target': {'id': 6, 'name': 'FRANCE', 'x': 345, 'y': 120}},
+                 {'source': {'id': 5, 'name': 'JAPAN', 'x': 105, 'y': 246},
+                  'target': {'id': 6, 'name': 'FRANCE', 'x': 345, 'y': 120}},
+                 {'source': {'id': 1, 'name': 'USA', 'x': 87, 'y': 145},
+                  'target': {'id': 5, 'name': 'JAPAN', 'x': 105, 'y': 246}},
+                 {'source': {'id': 2, 'name': 'CHINA', 'x': 176, 'y': 94},
+                  'target': {'id': 3, 'name': 'INDIA', 'x': 249, 'y': 162}},
+                 {'source': {'id': 2, 'name': 'CHINA', 'x': 176, 'y': 94},
+                  'target': {'id': 5, 'name': 'JAPAN', 'x': 105, 'y': 246}},
+                 {'source': {'id': 3, 'name': 'INDIA', 'x': 249, 'y': 162},
+                  'target': {'id': 6, 'name': 'FRANCE', 'x': 345, 'y': 120}}]
+        
+    }
+
+    //We will create a new array called data["links"] to store the {source id: target id} pairs of each edge
+    data["links"]=[]
+    for(let i=0;i<data.edges.length;i++){
+        obj={}
+        obj["source"]=data.edges[i]["source"].id
+        obj["target"]=data.edges[i]["target"].id
+        data.links.push(obj);
+    }
+    const colorMap = {
+        NA: "blue",
+        AS: "red",
+        EU: "green",
+    }
+
+    const svg=d3.select("#force")
+          .append("svg")
+          .attr("width",width-margin.right-margin.left)
+          .attr("height",height-margin.top-margin.bottom)
+
+    //create edges using "line" elements
+    for (let i = 0; i < data.edges.length; i++) {
+        const obj = {
+            source: data.edges[i].source.id,
+            target: data.edges[i].target.id,
+        };
+        data.links.push(obj);
+    }
+    let link = svg
+        .selectAll("line")
+        .data(data.links) 
+        .enter()
+        .append("line")
+        .attr("stroke", "lightgray");
+    //create nodes using "circle" elements
+    let node = svg.selectAll("circle")
+        .data(data.nodes)
+        .enter()
+        .append("circle")
+        .style("fill", d => colorMap[d.continent])
+        .attr("r", 5)
+    //create label using "text" elements
+    let label = svg.selectAll("text")
+        .data(data.nodes)
+        .enter()
+        .append("text")
+        .text(d => d.name)
+    //create force graph
+	let force = d3.forceSimulation(data.nodes)
+        .force('charge', d3.forceManyBody())
+        .force('center', d3.forceCenter(width/2, height/2))
+        .force('collision', d3.forceCollide().radius(function(d) {
+            return 5
+        }))
+
+        force.on("tick", function() {
+        link.attr("x1", function(d) {
+                const sourceNode = data.nodes.find(node => node.id === d.source);
+                return sourceNode.x;
+            })
+            .attr("y1", function(d) {
+                const sourceNode = data.nodes.find(node => node.id === d.source);
+                return sourceNode.y;
+            })
+            .attr("x2", function(d) {
+                const targetNode = data.nodes.find(node => node.id === d.target);
+                return targetNode.x;
+            })
+            .attr("y2", function(d) {
+                const targetNode = data.nodes.find(node => node.id === d.target);
+                return targetNode.y;
+            });
+
+        node.attr("cx", function(d) {
+            return d.x;
+            })
+            .attr("cy", function(d) {
+            return d.y;
+            });
+        label.attr("x", function(d) {
+            return d.x;
+            })
+            .attr("y", function(d) {
+            return d.y;
+            });
+        });
+	
+	// create zoom effect
+	let zoom = d3.zoom()
+        .scaleExtent([0.5, 10])
+        .translateExtent([[-100, -100], [width + 100, height + 100]])
+        .on("zoom", zoomed);
+    function zoomed(event) {
+        node.attr("transform", event.transform);
+        link.attr("transform", event.transform);
+        label.attr("transform", event.transform);
+    }
+
+
+    svg.call(zoom)
+    
+  </script>
+</body>
+</html>
