@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
+    <title>World Map</title>
+    <style>
+        #tooltip {
+          border: 1px solid #ccc;
+          padding: 10px;
+          opacity: 0;
+          pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tooltip"></div>
+    <div id="us">
+    </div>
+    <div id="world">
+    </div>
+    <script>
+        let width = 1000;
+        let height = 800;
+
+        //---------------------------USA ---------------------
+        const svg1 = d3.select("#us")
+                        .append("svg")
+                        .attr("width", width)
+                        .attr("height", height);
+
+        const projection1 = d3.geoAlbersUsa()
+            .scale(700) 
+            .translate([width/2, height /2]); 
+        
+        const pathgeo1 = d3.geoPath().projection(projection1);
+
+
+        // load us-states.json
+        const map = d3.json("./us-states.json");
+
+        map.then(map => {
+
+            svg1.selectAll("path")
+                .data(map.features)
+                .enter()
+                .append("path")
+                .attr("d", pathgeo1)
+            });
+
+
+
+
+        // -----------------WORLD------------------------------
+        const svg2 = d3.select("#world")
+                        .append("svg")
+                        .attr("width", width)
+                        .attr("height", height);
+        
+        const projection2  = d3.geoNaturalEarth1()
+            .scale(100)
+            .translate([width/2, height/2])
+
+        const pathgeo2 = d3.geoPath().projection(projection2);
+                
+        d3.json("world.json").then(map =>{
+            svg2.append('path')
+                .attr('class', 'sphere')
+                .attr('d', pathgeo2({ type: 'Sphere' }))
+                .attr("fill", "skyblue");
+            svg2.selectAll('.worldpath')
+                .data(map.features)
+                .enter().append("path")
+                .attr('class', 'worldpath')
+                .attr('d', pathgeo2)
+                .attr("fill", "green")
+                .on("mouseover", (e, d) => {
+                    let box = document.getElementById("tooltip")
+                    box.style.opacity = 1
+                    box.style.position = "absolute"
+                    box.style.backgroundColor = "white"
+                    box.style.left = event.pageX + 10 + "px"
+                    box.style.top = event.pageY - 10 + "px"
+                    box.innerHTML = d.id
+                })
+                .on("mouseleave", (e, d) => {
+                    let box = document.getElementById("tooltip")
+                    box.style.opacity = 0
+                    box.innerHTML = ""
+                })
+        });
+        
+
+
+        
+
+
+    </script>
+</body>
+
+</html>
