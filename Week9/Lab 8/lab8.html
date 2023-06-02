@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
+    <title>World Map</title>
+    <style>
+        #tooltip {
+          border: 1px solid #ccc;
+          padding: 10px;
+          opacity: 0;
+          pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="tooltip"></div>
+    <div id="us">
+    </div>
+    <div id="world">
+    </div>
+    <script>
+        let width = 1000;
+        let height = 800;
+
+        // -----------------WORLD------------------------------
+        const svg = d3.select("#world")
+                        .append("svg")
+                        .attr("width", width)
+                        .attr("height", height);
+        //TO DO: Create projection and pathgeo variables for world
+        const projection  = d3.geoNaturalEarth1()
+                                .scale(100)
+                                .translate([width/2, height/2])
+
+        const pathgeo = d3.geoPath().projection(projection);
+        const transitionDuration = 3000
+                
+        //TO DO: Load JSON file and create the map
+        d3.json("world.json").then(map =>{
+            console.log(map);
+
+            // drawing a sphere, the outline of the globe 
+            svg.append('path')
+                .attr('class', 'sphere')
+                .attr('d', pathgeo({ type: 'Sphere' }))
+                .attr("fill", "skyblue");
+
+            svg.selectAll('.worldpath')
+                .data(map.features)
+                .enter().append("path")
+                .attr('class', 'worldpath')
+                .attr('d', pathgeo)
+                .attr("fill", "green");
+                
+                const route = [{x: -73.935242, y: 40.730610},{x: -43.196388, y: -22.908333}, {x: 151.209900,y: -33.865143}, {x: 77.1025, y: 28.7041}]
+                // NYC, Rio de Janeiro, Sydney, Delhi
+                // [longitude, latitude]
+                
+                const routeProjected = [];
+                
+                for (i in route){
+                    routeProjected.push(projection([route[i].x, route[i].y]));
+                }
+                
+            const lineGenerator = d3.line();
+            const routeData = lineGenerator(routeProjected);
+
+            // Define the path for the points in routeData
+            let path = svg.append("path")
+                .attr('class', 'route')
+                .attr('d', routeData)
+                .attr('fill', "none")
+                .attr("stroke", "red")
+
+            // Get totalLength of path. It should have roughly around 552.8
+            let totalLength = path.node().getTotalLength();
+
+            // Transition the line
+            path.attr("stroke-dasharray", `${totalLength} ${totalLength}`)
+                .attr("stroke-dashoffset", totalLength)
+                .transition()
+                .ease(d3.easeLinear)
+                .duration(transitionDuration)
+                .attr("stroke-dashoffset", 0);
+
+            // Draw circle at initial location
+            const circle = svg.append('circle')
+                .attr('fill', 'red')
+                .attr('r', 5)
+                .attr('transform', `translate(${route[0].x}, ${route[0].y})`);
+
+            // Define the translate function for the circle
+            function translateAlong(path) {
+                const length = path.getTotalLength();
+                return function() {
+                return function(t) {
+                    const {x, y} = path.getPointAtLength(t * length);
+                    return `translate(${x},${y})`;
+                }
+                }
+            }
+
+            // Animate the transition of the circle
+            circle.transition()
+                .ease(d3.easeLinear)
+                .duration(transitionDuration)
+                .attrTween('transform', translateAlong(path.node()));
+
+                const route2 = [{x: -73.935242, y: 40.730610}, {x: 2.3522,y: 48.8566}, {x: 77.1025, y: 28.7041}]
+// NYC, Paris, Delhi
+
+const routeProjected2 = [];
+
+for (i in route2){
+    routeProjected2.push(projection([route2[i].x, route2[i].y]));
+}
+
+const lineGenerator2 = d3.line();
+const routeData2 = lineGenerator2(routeProjected2);
+
+// Define the path for the points in routeData
+let path2 = svg.append("path")
+    .attr('class', 'route2')
+    .attr('d', routeData2)
+    .attr('fill', "none")
+    .attr("stroke", "red")
+
+// Get totalLength of path
+let totalLength2 = path2.node().getTotalLength();
+
+// Transition the line
+path2.attr("stroke-dasharray", totalLength2 + " " + totalLength2)
+    .attr("stroke-dashoffset", totalLength2)
+    .transition()
+    .ease(d3.easeLinear)
+    .duration(transitionDuration)
+    .attr("stroke-dashoffset", 0);
+
+// Draw circle at initial location
+const circle2 = svg.append('circle')
+    .attr('fill', 'red')
+    .attr('r', 5)
+    .attr('transform', `translate(${route2[0].x},${route2[0].y})`);
+
+// Animate the transition of the circle
+circle2.transition()
+    .ease(d3.easeLinear)
+    .duration(transitionDuration)
+    .attrTween('transform', translateAlong(path2.node()));
+        }); 
+        
+
+    </script>
+</body>
+
+</html>
