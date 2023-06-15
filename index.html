@@ -6,10 +6,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSC106 - Final Project</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="app.js" defer></script>
 </head>
 <body>
-    <h1>DSC106 Final Project</h1>
+    <section class="screen" id="s0">
+        <h1 id="title">Dive into Anime and the Future</h1>
+        <div id="showcase-row">
+            <div class="showcase">
+                <h3>Exploring Anime Genres Over the Years</h3>
+                <div class="showcase-img-wrapper"></div>
+                <p>...continues to be a dominant powerhouse in the industry, with a noticable drop in 2018. However, it does rebound back the following year. The Kids genres has probably been the most genre across all the years. There are no major fluctuations and it continues to maintain the same count year after year. However, in the industry of growth, it is proportionaly shrinking. Fantasy initially appears to have intermentint popularity but there is a noticable jummp in 2018. Much...</p>
+            </div>
+            <div class="showcase">
+                <h3>Exploring Recommendations between Anime</h3>
+                <div class="showcase-img-wrapper"></div>
+                <p>...appears to be very messy. However, if we take a closer look, we can can extract some interesting conclusions. By zooming out and panning to the bottom right, we arrive at a tail. By taking a look at this tail, we can see that a lot of these shows tend to have the same genre, specifically Isekai. By panning over a bit, we can see why these are clustered around this area. Sword Art Online, the most popular isekai serves as a central hub connecting all other..</p>
+            </div>
+            <div class="showcase">
+                <h3>Exploring the Locations of Top Animation Studios</h3>
+                <div class="showcase-img-wrapper"></div>
+                <p>...we can see most animation studios are grouped into different wards in Tokyo. A noticable exception to this is Kyoto Animation, which we can see if we pan the camera to Uji, Kyoto. Going back to Tokyo, we can see a lot of studios are stationed Shinjuku and Chiyoda. Something interesting to note is that they are only a couple of kilometers from Akihabara and Roppongi...</p>
+            </div>
+        </div>
+    </section>
+    <section class="screen demo" id="s1">
+        <div class="content">
+            <h2>Exploring Anime Genres Over the Years</h2>
+            <p>
+                The visualization shows Anime from the most popular genres. A single anime can have multiple genres so the primary genre key will define that anime's genre. The most popular genres are as follows: Comedy, Kids, Fantasy, Action, Adventure, Sci-Fi, Drame, Romance, School.<br><br>
+                As seen in the visual, overall anime count over the years have generally continued to rise. There has be a dip in the most recent years but this can be attributed to delays and produciton issues during COVID=19. The rising counts are most likely due to the rise in popularity in other countries other than Japan. However, the ammount of the top genres do not remain proportional. <br><br>
+                Comedy continues to be a dominant powerhouse in the industry, with a noticable drop in 2018. However, it does rebound back the following year. The Kids genres has probably been the most genre across all the years. There are no major fluctuations and it continues to maintain the same count year after year. However, in the industry of growth, it is proportionaly shrinking. Fantasy initially appears to have intermentint popularity but there is a noticable jummp in 2018. Much of the data here may also be represented in other genres such as Adventure and Action. An example of this is <a href="https://myanimelist.net/anime/15809/Hataraku_Maou-sama">Hataraku Maou-sama!</a> where it is classified as Comedy, despite being also a Fantasy anime. Sci-Fi is almost non-existant and is expected to decline. There are hotspots in this genre such as Kidou Senshi Gundam series, Neon Gensis Evangelion, and the recent and personal favorite 86. The last three genres, Drama, Romance, and School can all be viewed together as much of such anime tend to blend together. Although there does not appear to be many here, a lot do get absorbed into the Comedy genre. Romcom shows like Kaguya-sama: Love Is War, Yahari Ore no Seishun Love Comedy wa Machigatteiru, and Saenai Heroine no Sodatekata all fall into this pitfal.<br><br>
+                Overall, we can expect growth from all Genres except for Sci-Fi and Kids. Kids will most likely remain consistent, inline with historical trends while Sci-Fi will continue to decline, albiet with a steadfast fanbase.
+            </p>
+            <div id="tooltip"></div>
+        </div>
+    </section>
+    <section class="screen demo" id="s2">
+        <div class="content">
+            <h2>Exploring Recommendations between Anime</h2>
+            <p>
+                The following visualization is a network graph where nodes represent various anime and links represent recommendations. Each link is only colored if they meet one of the folloing criteria: <br><br>
+                <ul>
+                    <li>Contains 20 or more number of recommendations</li>
+                    <li>Comes from a popular anime (top 250)</li>
+                    <li>Comes from a well rated anime (8+ on a 1-10 scale)</li>
+                    <li>Comes from a well favorited anime (2000+ favorites)</li>
+                </ul><br>
+                At first glance, the network graph appears to be very messy. However, if we take a closer look, we can can extract some interesting conclusions. By zooming out and panning to the bottom right, we arrive at a tail. By taking a look at this tail, we can see that a lot of these shows tend to have the same genre, specifically Isekai. By panning over a bit, we can see why these are clustered around this area. Sword Art Online, the most popular isekai serves as a central hub connecting all other isekai.<br><br>
+                Moving to the top of the cluster, we settle upon Iyashikei land. Top hitters such as Yuru Camp, Non Non Biyori, and Mushishi all cluster around here. It is not as dense as the Isekai cluster, but provides a good visualization on similar anime.<br><br>
+                Panning over to the the huge dense cluster on the bottom left shows deep connections on shounen anime. Some of the more populous hubs in this sector are Shingeki no Kyojin, Elfen Lied, and most of the Fate series.<br><br>
+                Here, we can actually see that these interconnecting networks serve as good representation of similar interests. If this graph network were uploaded to a graph database such as neo4j, we would be able to see the various connections between anime. Utilizing the covariance between such, we can accurately make predictions, serving as a recommender system.
+            </p>
+        </div>
+        <div id="c-target">
+            <h3>Network Graph of Anime and Recommendations</h3>
+        </div>
+    </section>
+    <section class="screen demo" id="s3">
+        <div class="content">
+            <h2>Exploring the Locations of Top Animation Studios</h2>
+            <p>
+                Inside the visualization shows a kernal density estimate based heatmap depicting the density of animation studios and their locations.<br><br>
+                Looking at the map, we see a large concentraion in Japan. This is obvious as most anime is produced within Japan. Zooming in a bit, we can see most animation studios are grouped into different wards in Tokyo. A noticable exception to this is Kyoto Animation, which we can see if we pan the camera to Uji, Kyoto. Going back to Tokyo, we can see a lot of studios are stationed Shinjuku and Chiyoda. Something interesting to note is that they are only a couple of kilometers from Akihabara and Roppongi. There is presence in Shibuya but not to a significant biased amount. <br><br>
+                Jumping around Asia, we can see various animation studios situation in China and Korea. The studios in China are most likely, B.C. May Pictures and Tencent Films. Both have very large IPs under the belt like Shiguang Dailiren, Tian Guan Ci Fu, and Mo Dao Zu Shi.<br><br>
+                We can see a similar situation in Korea with studios like Moi Animation and Studio Mir serving as large bastions. However, the Korean IPs are not as big and tend to focus on a differing genre.<br><br>
+                Moving to the United States, there is some presence but not much. Notable locations are Texas, California, and New York, all very large economic powerhouses.
+            </p>
+        </div>
+        <div>
+            <h3>KDE Heatmap of Animation Studios</h3>
+            <div id="map"></div>
+        </div>
+    </section>
+    <section class="screen" id="s4">
+        <p>
+
+        </p>
+        <div id="showcase-row">
+            <div class="showcase end">
+                <h3>Exploring Anime Genres Over the Years</h3>
+                <div class="showcase-img-wrapper"></div>
+                <p>...continues to be a dominant powerhouse in the industry, with a noticable drop in 2018. However, it does rebound back the following year. The Kids genres has probably been the most genre across all the years. There are no major fluctuations and it continues to maintain the same count year after year. However, in the industry of growth, it is proportionaly shrinking. Fantasy initially appears to have intermentint popularity but there is a noticable jummp in 2018. Much...</p>
+            </div>
+            <div class="showcase end">
+                <h3>Exploring Recommendations between Anime</h3>
+                <div class="showcase-img-wrapper"></div>
+                <p>...appears to be very messy. However, if we take a closer look, we can can extract some interesting conclusions. By zooming out and panning to the bottom right, we arrive at a tail. By taking a look at this tail, we can see that a lot of these shows tend to have the same genre, specifically Isekai. By panning over a bit, we can see why these are clustered around this area. Sword Art Online, the most popular isekai serves as a central hub connecting all other..</p>
+            </div>
+            <div class="showcase end">
+                <h3>Exploring the Locations of Top Animation Studios</h3>
+                <div class="showcase-img-wrapper"></div>
+                <p>...we can see most animation studios are grouped into different wards in Tokyo. A noticable exception to this is Kyoto Animation, which we can see if we pan the camera to Uji, Kyoto. Going back to Tokyo, we can see a lot of studios are stationed Shinjuku and Chiyoda. Something interesting to note is that they are only a couple of kilometers from Akihabara and Roppongi...</p>
+            </div>
+        </div>
+    </section>
+    <div id="nav">
+        <div class="buttons"><span class="material-symbols-outlined">home</span></div>
+        <div class="buttons"><span class="material-symbols-outlined">bar_chart</span></div>
+        <div class="buttons"><span class="material-symbols-outlined">hub</span></div>
+        <div class="buttons"><span class="material-symbols-outlined">public</span></div>
+        <div class="buttons"><span class="material-symbols-outlined">sports_score</span></div>
+    </div>
+    
 </body>
+
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJD0WoobYMvF-ctGALwld-Ri3mQm1kAGI&libraries=visualization&callback=initMap&v=weekly" defer></script>
 </html>

@@ -7,4 +7,144 @@
 }
 body {
     font-family: 'Poppins';
+    overflow-x: hidden;
+}
+
+/* Screen Styling */
+.screen {
+    height: 100vh;
+    width: 99vw;
+    margin: 4vh auto;
+}
+.demo {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.demo .content {
+    width: 35%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.content h2 {
+    font-size: 5vh;
+}
+
+/* SVG Styling */
+.svg-container-s1 {
+    position: relative;
+    width: 50%;
+    height: 40%;
+    display: flex;
+    align-items: center;
+}
+.svg-content-s1 {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+/* Landing Styling */
+#title {
+    font-size: 7.5vh;
+    text-align: center;
+    margin: 5vh auto;
+}
+
+#showcase-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    width: 85%;
+    margin: auto;
+}
+.showcase {
+    width: 30%;
+    align-items: center;
+    padding: 2% 3%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    transition: 0.3s;
+}
+.showcase:hover{
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+.showcase * {
+    margin: 2%;
+}
+.showcase h3 {
+    font-size: 4vh;
+}
+.showcase .showcase-img-wrapper {
+    width: 90%;
+    height: 20vh;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-image: url(https://images.nature.com/original/magazine-assets/d41586-022-03056-1/d41586-022-03056-1_23538960.jpg);
+}
+
+/* Ending */
+#s4 p {
+    width: 75%;
+    margin: auto;
+    padding: 2.5vh 0;
+}
+
+/* Nav */
+#nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    bottom: 2.5vh;
+    position: fixed;
+    align-items: center;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+#nav > div {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 5%;
+    margin: 1vh;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    transition: 0.3s;
+}
+#nav > div:hover {
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+#nav span {
+    font-size: 2.5vh;
+}
+
+#tooltip {
+    border: 1px solid #ccc;
+    padding: 10px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+canvas {
+   border: 1px solid black;
+   border-radius: 5px;
+}
+
+
+#map {
+    height: 65vh;
+    width: 50vw;
 }
